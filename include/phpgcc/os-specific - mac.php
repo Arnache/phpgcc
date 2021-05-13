@@ -1,5 +1,8 @@
 <?php
 
+// Note: you need to adapt the values below to your system
+// and rename this file to os-specific.php
+
 $os="mac";
 $extension=".mac.exe";
 $include_path="/usr/local/include";
