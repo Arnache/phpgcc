@@ -46,5 +46,8 @@ May 2021
 - Put the PNGImg in global scope and, for the batch mode, instead of re-creating the PNGImg object for each save, we use the same. The global scope allows for the user of the library to set the colorspace, for instance. The code is also now simpler, and we copy less things around. A bit more risky too: the user shall not interfere with the PNGImg object in a way that could break things, (like changing the size of its data vector). 
 - Corrections and tweaks on the examples
 
+# v9.6
+- Added the missing os-specific-*.php files, updated the manual to mention them
+
 # future
 - Integrate gd?
