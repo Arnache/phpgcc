@@ -42,9 +42,14 @@ It creates a .cc file from the variables defined in the *calling script* and cal
 ## Variables
 
 ### Mandatory
+
+- `$author` either `""` or name of the author (the user of the library)
 - `$year` a string containing for instance the year when the calling script was created or last modified
 - `$version` a string containing the version number of the calling script
-- `$description` a string containing a description of what the generated program will do
+
+The three variable above must be php strings. They will be included in the C++ code enclosed with double quotes: " (and in EPS %% comments if `$colorType` is `'ps'`) so don't do crazy things with them. For instance, don't put a line break, a `"` nor a `\` in `$author`, `$year` or `$version`.
+
+- `$description` a string containing a description of what the generated program will do (this variable is correctly escaped for its inclusion in C++ and EPS so you are more free than with the previous ones)
 - `$colorType` one of  `"true color"`, `"palette"`, `"no pic"`, `"ps"`
 - `$parameters` an array of associative arrays of the form
 `array("name" => ,  "type" => , "default" => , "description" => )`
@@ -53,7 +58,9 @@ where each value is a string:
   - `type` the variable type: one of `int`, `float` (a `double`), `complex` (a `std::complex<double>`), `string` (a `std::string`), `bool` or `color` (a struct defined in `color.cc`)
   - `default` a string with giving the default value for the variable (must be formatted so as to work with `std::ostringstream << default` for the common types, and for `color` see below) or `""` if the variable must be a mandatory parameter on the command line
   - `description` a short description of the role of this parameter in the program, this will be copied in the generated program source and will be accessible from the command line too
-These will be the command line parameters of the generated program.
+
+  These will be the command line parameters of the generated program.
+
 - `$globalDeclarations` piece of C++ code that is inserted at global scope
 - `$init` piece of C++ code that will be inserted in `main()` just after the creation of the image object. It is called only once.
 - `$precomputations` piece of C++ code that will be inserted in a function `void performComputations() {...}`. that is called just before the phases. If `$batch` is true, it is called for each sequence element in the case of a sequence.
@@ -78,6 +85,21 @@ The format for reading colors is `(R,G,B)` where R,G,B are unsigned integers < 2
 - `$libs` additional linker commands to add libraries. For instance `"-lgmp -lmpfr"` for multiprecision computation.
 - `$override_compile_command` if defined, this will replace the complete compilation command
  
+### Generated program usage
+
+`prog_name [options]`
+
+Options can be
+
+- `--help`
+- `--options`
+- `--options --verbose`
+- `--help`
+- `--var_name value` where `var_name` is one of the variable names defined in `$parameters` and value is its value
+- `filename` a file containing lines of the form `var_name = value`
+
+A var_name shall not be attributed twice, with the following exception: command line options supersede text file options (even text files appearing later in the command line).
+
 ### Structure of the .cc file created by the script  
 
 *Will be detailed here in a future version of this manual*

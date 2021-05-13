@@ -46,11 +46,18 @@ May 2021
 - Put the PNGImg in global scope and, for the batch mode, instead of re-creating the PNGImg object for each save, we use the same. The global scope allows for the user of the library to set the colorspace, for instance. The code is also now simpler, and we copy less things around. A bit more risky too: the user shall not interfere with the PNGImg object in a way that could break things, (like changing the size of its data vector). 
 - Corrections and tweaks on the examples
 
-# v9.6 (work in progress)
-- Added comments in the os-specific-*.php files, changed some var names and their behaviour to include the possibility of a local use (without copying files to a system folder). Updated the manual.
-- Added details of the other php fields in the manual
-- Completed the manual
+# v9.6
 
-# future
+- Added details of the other php fields in the manual
+- Modified the help text of the generated program
+- Added php field `$author`
+- Added escaping of characters for inclusion of $description in C++ and EPS
+- Added comments in the os-specific-*.php files, changed some var names and their behaviour to include the possibility of a local use (without copying files to a system folder)
+- Updated the manual
+- Adapted the example and made small modification of the comments
+- Moved the `-g0 -O3` compiler options out of the default to put them in the examples in `$compileDirectives`
+- phpgcc.php was encoded in latin-1, now it is in utf-8 (this had minor impact)
+
+# Future
 - Complete the section of the manual called "Structure of the .cc file created by the script"
 - Integrate gd?
