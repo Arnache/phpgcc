@@ -1,10 +1,12 @@
 <?php
 
+$author='Arnaud Chéritat';
+
 $year='2010';
 
 $version='1.0';
 
-$description='parabolic stuff';
+$description='One of Tan Leis\' theorems';
 
 $colorType='true color';
 

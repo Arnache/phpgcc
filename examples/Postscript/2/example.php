@@ -1,5 +1,7 @@
 <?php
 
+$author='Arnaud Chéritat';
+
 $year='2009';
 
 $version='1.0';
@@ -21,7 +23,7 @@ $globalDeclarations = '
 $init='';
 
 $precomputations = '
-  // MainClass ppal; // put it here instead of in phase if you want to avoid timing the constructor()
+  // MainClass ppal; // put it here instead of in phase if you want time the constructor() separately
 ';
 
 $phase=array();

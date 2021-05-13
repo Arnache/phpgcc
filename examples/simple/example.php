@@ -1,10 +1,12 @@
 <?php
 
+$author='Arnaud Chéritat';
+
 $year='2010';
 
 $version='1.0';
 
-$description='prototype';
+$description='The Mandelbrot set';
 
 $colorType='palette'; // 'true color','palette','no pic','ps'
 
@@ -42,7 +44,7 @@ $init = '
 ';
 
 $precomputations = '
-  // MainClass ppal; // put it here instead of in phase if you want to avoid timing the constructor()
+  // MainClass ppal; // put it here instead of in phase if you want time the constructor() separately
 ';
 
 $phase=array();

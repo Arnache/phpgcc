@@ -1,10 +1,12 @@
 <?php
 
+$author='Arnaud Chéritat';
+
 $year='2013';
 
 $version='1.0';
 
-$description='prototype';
+$description='Some Julia set';
 
 $colorType='true color'; // 'true color','palette','no pic','ps'
 
@@ -26,15 +28,12 @@ $globalDeclarations = '
 #include "class.cc"
 ';
 
-//$paletteChanges = '
-//';
-
 $init = '';
 
 $precomputations = '';
 
 /*
-// if you want to avoid timing the constructor(),
+// if you want to avoid time the constructor() separately,
 // put it here instead of putting it in phase[] 
 $precomputations = '
   MainClass ppal; 
