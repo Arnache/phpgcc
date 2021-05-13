@@ -4,7 +4,7 @@
 // Author: Arnaud Chéritat
 // work: 2005-2021
 
-// Version: 9.5
+// Version: 9.6
 
 // This PHP script plays the role of a precompiler: it outputs a C++ file and calls
 // gcc on it, with the correct libraries linked (see $compile)
@@ -13,7 +13,7 @@
 // of the following line at the end:
 // require("phpgcc.php");
 
-// see the example provided somewhere
+// see the examples provided somewhere
 
 // **********
 
@@ -61,13 +61,15 @@ if($n>0) {
 }
 
 // set default values of optional variables
+
 if(!isset($batch))        $batch = false;
 if(!isset($strip))        $strip = true;
 if(!isset($withGD))       $withGD = false;
 
 // Other optional variables should have no default values:
-//   $libs
-//   $override_compile_command
+//
+// -  $libs
+// -  $override_compile_command
 
 // **********
 
@@ -160,11 +162,13 @@ if(isset($override_compile_command)) {
 }
 else {
   $compile=$gpp.' -std=c++11 -Wall --pedantic-errors ';
-  if($include_path != "") $compile.= '-I'.$include_path;
-  $compile.=$more_paths.' ';
+  if($phpgcc_include_path != "")
+    $compile.= '-I'.$phpgcc_include_path.' ';
+  if($more_paths != "")
+    $compile.=$more_paths.' ';
   if(isset($compileDirectives))
     $compile.=$compileDirectives.' ';
-  $compile.="$ccName -g0 -O3 ";
+  $compile.="$ccName ";
   if($hasColorParams && $boost_regex)
     $compile .= '-lboost_regex ';
   if(isset($libs)) 
@@ -183,6 +187,19 @@ echo $compile."\n";
 if($strip && $os!="mac") $postprocess="strip --strip-all $exeName";
 
 $handle = fopen($ccName, "wb");
+
+function phpgcc_lib_include($name) {
+  global $phpgcc_dirname, $phpgcc_installed;
+
+  $temp = $name;
+  if($phpgcc_dirname !== "")
+    $temp = $phpgcc_dirname."/".$temp;
+
+  if($phpgcc_installed)
+    return "<$temp>";
+  else
+    return "\"$temp\"";
+}
 
 // **********
 
@@ -216,7 +233,7 @@ $content .= '
 #include <getopt.h>
 ';
 if($hasColorParams) {
-  $content.='#include <'.$lib_name.'/color.cc>
+  $content.='#include '.phpgcc_lib_include('color.cc').'
 ';
   if($boost_regex)
     $content .= '#include <boost/regex.hpp>
@@ -230,7 +247,7 @@ if($hasComplexParams) {
 ';
 }
 if(in_array($colorType,array('true color','palette')))
-  $content.='#include <'.$lib_name.'/PNGImg.cpp>
+  $content.='#include '.phpgcc_lib_include('PNGImg.cpp').'
 ';
 $content .= "\n";
 
@@ -288,7 +305,7 @@ if($colorType=='ps')
   $content.='
 std::stringstream ps; // string containing the file data
 int bbLeft, bbRight, bbBottom, bbTop; // bounding box
-#include <'.$lib_name.'/PSfuncs.cc>
+#include '.phpgcc_lib_include('PSfuncs.cc').'
 
 ';
 
@@ -972,7 +989,7 @@ int main(int argc, char** argv) {
   Argc=argc; Argv=argv;
 
   // all the command line argument reading/processing is done in clread.cc
-  #include <'.$lib_name.'/clread.cc>
+  #include '.phpgcc_lib_include('clread.cc').'
 ';
 if(in_array($colorType,array('true color','palette')))
   $content.='
