@@ -9,7 +9,6 @@
 
  It will read the command line arguments (using the getopt library #include <getopt.h>)
  and call the procedure setParam() accordingly
- 
 
 */
 
