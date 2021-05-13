@@ -8,6 +8,8 @@ $description='parabolic stuff';
 
 $colorType='true color';
 
+$compileDirectives='-g0 -O3';
+
 $batch=true;
 
 $parameters=array(
