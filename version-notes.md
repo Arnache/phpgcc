@@ -47,8 +47,10 @@ May 2021
 - Corrections and tweaks on the examples
 
 # v9.6 (work in progress)
-- Added comments in the os-specific-*.php files, updated the manual to mention them
-- ...
+- Added comments in the os-specific-*.php files, changed some var names and their behaviour to include the possibility of a local use (without copying files to a system folder). Updated the manual.
+- Added details of the other php fields in the manual
+- Completed the manual
 
 # future
+- Complete the section of the manual called "Structure of the .cc file created by the script"
 - Integrate gd?
