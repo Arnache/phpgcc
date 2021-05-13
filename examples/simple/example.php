@@ -8,9 +8,7 @@ $description='prototype';
 
 $colorType='palette'; // 'true color','palette','no pic','ps'
 
-// $compileDirectives='-fopenmp';
-
-// $withGD = true;
+$compileDirectives='-g0 -O3';
 
 $batch = false;
 
