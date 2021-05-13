@@ -8,6 +8,8 @@ $description='Line example';
 
 $colorType='ps';
 
+$compileDirectives='-g0 -O3';
+
 $parameters=array(
 //  array("name" => '',  "type" => '', "default" => '', "description" => ''),
 );
