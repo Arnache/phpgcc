@@ -58,6 +58,10 @@ May 2021
 - Moved the `-g0 -O3` compiler options out of the default to put them in the examples in `$compileDirectives`
 - phpgcc.php was encoded in latin-1, now it is in utf-8 (this had minor impact)
 
+# v9.6.1
+
+- The computation time was not properly saved in the metadata, this is now corrected. Cleaned up the corresponding code a little bit.
+
 # Future
 - Complete the section of the manual called "Structure of the .cc file created by the script"
 - Integrate gd?
