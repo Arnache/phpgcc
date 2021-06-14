@@ -38,7 +38,7 @@ void scanline::scan()
     done++;
   }
 
-  std::cout << "100%\n";
+  std::cout << "-100%\n";
 
   #ifdef COUNT_ITER
   std::cout << "Average number of iterations " << ((double) iterCount)/((double) (width*height)) << " (total: " << iterCount << ")\n";
