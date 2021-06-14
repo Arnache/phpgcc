@@ -4,7 +4,7 @@
 // Author: Arnaud Chéritat
 // work: 2005-2021
 
-// Version: 9.6
+// Version: 9.6.1
 
 // This PHP script plays the role of a precompiler: it outputs a C++ file and calls
 // gcc on it, with the correct libraries linked (see $compile)
@@ -357,7 +357,7 @@ int bbLeft, bbRight, bbBottom, bbTop; // bounding box
 ';
 
 $content.='
-std::string duration_string, total_duration_string;
+std::string pic_duration_string;
 
 std::string progName="'.$name.'"; // used in clread.cc
 
@@ -712,7 +712,7 @@ void performComputations() {
 // in the php variable $phase, which shall be an array of strings
 // -each phase is timed 
 // -the total duration is measured too
-// -the precomputation is timed and included in the total duration (new)
+// -the precomputation is timed and included in the total duration
 // -all these durations are printed on screen.
 // The special case where there is only one phase is taken care of.
 
@@ -785,7 +785,7 @@ else $content.='  std::cout << "Image computation total duration: ";
 ';
 $content.='
   pct(timer3,timer4);
-  total_duration_string = duration_string; // copy
+  pic_duration_string = cct(timer3,timer4);
   std::cout << "\n";
 }
 
@@ -855,7 +855,7 @@ $content .= '
   img.text_list.push_back(t);
 
   t.key = "Computation time";
-  t.text = total_duration_string;
+  t.text = pic_duration_string;
   img.text_list.push_back(t);
 
   // Save the picture
@@ -1033,6 +1033,9 @@ $content.='
  * main is the entry point of every C/C++ program
  */ 
 int main(int argc, char** argv) {
+  std::chrono::high_resolution_clock::time_point timer1,timer2; // program duration time
+
+  timer1 = std::chrono::high_resolution_clock::now();
 
   Argc=argc; Argv=argv;
 
@@ -1070,10 +1073,6 @@ if($colorType=='palette') {
 ';
 }
 $content .= '
-  std::chrono::high_resolution_clock::time_point timer1,timer2; // total duration time
-
-  timer1 = std::chrono::high_resolution_clock::now();
-
   // init  
 ';
 $content .= $init."\n";
@@ -1093,9 +1092,9 @@ else { $content .= '
 $content .= '
   timer2 = std::chrono::high_resolution_clock::now();
 
-  // Print total computation time
+  // Print program duration
 
-  std::cout << "Total Duration: ";
+  std::cout << "Program Duration: ";
   pct(timer1,timer2);
   std::cout << "\n\n";
 
