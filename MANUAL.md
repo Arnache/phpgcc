@@ -13,7 +13,8 @@ Have `libpng-dev` installed.
 
 Optionally install `boost-regex`.
 
-Have `php-cli` installed.
+Have `php-cli` installed, with `mbstring` extension enabled.
+
 
 ## Procedure
 - You can either install the library files in a system folder (the script will call `#include <...>` in the C++ code) or in a local or user folder (it will call `#include "..."`)
@@ -48,6 +49,8 @@ It creates a .cc file from the variables defined in the *calling script* and cal
 - `$version` a string containing the version number of the calling script
 
 The three variable above must be php strings. They will be included in the C++ code enclosed with double quotes: " (and in EPS %% comments if `$colorType` is `'ps'`) so don't do crazy things with them. For instance, don't put a line break, a `"` nor a `\` in `$author`, `$year` or `$version`.
+
+It you wish to include licence mention, a good place is within the `$author` or the `$year` variables.
 
 - `$description` a string containing a description of what the generated program will do (this variable is correctly escaped for its inclusion in C++ and EPS so you are more free than with the previous ones)
 - `$colorType` one of  `"true color"`, `"palette"`, `"no pic"`, `"ps"`
@@ -113,7 +116,7 @@ Arnaud Chéritat
 CC BY-SA 4.0 Arnaud Chéritat
 
 ## Timeline
-2005-2021 see `version-notes.md`
+2005-2022 see `version-notes.md`
 
 ## Disclaimer
 This code is provided as-is without any guarantee of any sort. In now way the author can be liable for any damage it may induce.

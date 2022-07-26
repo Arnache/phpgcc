@@ -28,8 +28,8 @@ Sept 2020
 # v9.0 to v9.3
 May 2021
 
-- Modernizing C++ code
-  - Using std::complex instead of old personnal implementation of complex numbers
+- Modernising C++ code
+  - Using std::complex instead of old personal implementation of complex numbers
   - RAII: avoiding pointers, using std::vectors, etc.
   - etc.
 - Using recent version of PNGImg
@@ -37,7 +37,7 @@ May 2021
 - In the example suite:
   - modified the simple EPS example to a simpler one
   - modified the sequence example to a simpler one
-  - enhanced the code and tweaked a few algos
+  - enhanced the code and tweaked a few algorithms
 
 # v9.4
 - Changed the palette handling
@@ -61,6 +61,19 @@ May 2021
 # v9.6.1
 
 - The computation time was not properly saved in the metadata, this is now corrected. Cleaned up the corresponding code a little bit.
+
+# v9.6.2
+
+- #inlcuded <vector>
+
+# v9.6.3
+
+- corrected an omission: for movies, clear the text fields of the PNGImg object (since we reuse it; an alternative would be to dump it and recreate it every time)
+- minor modifications in php error output
+- added $colorType for paletted images and true color : 'linear' or 'sRGB'
+- removed copyright symbol near the year in metadata, reordered the line
+- added latin-1 enforcement for $author, $year, $version, $description
+- as a consequence: php must now be installed with mbstring extension
 
 # Future
 - Complete the section of the manual called "Structure of the .cc file created by the script"
