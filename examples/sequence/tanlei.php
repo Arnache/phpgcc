@@ -8,7 +8,8 @@ $version='1.0';
 
 $description='One of Tan Leis\' theorems';
 
-$colorType='true color';
+$colorType='true color'; // 'true color','palette','no pic','ps'
+$colorSpace='linear'; // 'linear,'sRGB'
 
 $compileDirectives='-g0 -O3';
 

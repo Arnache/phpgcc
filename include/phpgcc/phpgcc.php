@@ -4,7 +4,7 @@
 // Author: Arnaud Chéritat
 // work: 2005-2021
 
-// Version: 9.6.1
+// Version: 9.6.3
 
 // This PHP script plays the role of a precompiler: it outputs a C++ file and calls
 // gcc on it, with the correct libraries linked (see $compile)
@@ -47,17 +47,48 @@ $list = array(
   'phase',
   'colorType',
 );
+$latin1_vars = array(
+  'author',
+  'year',
+  'version',
+  'description',
+);
 $missing = array();
+function hex($i) { // $i should be int between 0 and 255 both included
+  return $i < 16 ? '0'.dechex($i) : dechex($i);
+}
+$latin1_in_utf8 = array(); // list of 256 utf8 encoded strings containing each of the 256 latin-1 characters
+for($i = 0; $i<256 ; $i++) {
+  if($i<32) continue;
+  if($i>=127 && $i<160) continue;
+  $latin1_in_utf8[] = mb_convert_encoding(hex2bin(hex($i)),mb_internal_encoding(),"ISO-8859-1");
+}
+function test_latin1($s) {
+  global $latin1_in_utf8;
+  $a=mb_str_split($s);
+  foreach ($a as $c){
+    if(!in_array($c,$latin1_in_utf8)) return false;
+  }
+  return true;
+}
 foreach($list as $name) {
   if(!isset($$name)) $missing []= '$'.$name;
+  else if(in_array($name,$latin1_vars)) {
+    if(test_latin1($$name)) {
+      ${$name.'_latin1'}=utf8_decode($$name);
+    }
+    else {
+      echo 'Warning: converting variable $'.$name.' to latin-1: it contains non-convertible characters'."\n";
+    }
+  }
 }
 $n=count($missing);
 if($n>0) { 
   $s = 'missing variable';
   if($n>1) $s .= 's';
   $s .= ':';
-  foreach($missing as $v) $s .= ' '.$v;
-  $s.="\n";
+  foreach($missing as $v) $s .= ' $'.$v;
+  $s.=" in php script\n";
   exit($s);
 }
 
@@ -98,6 +129,31 @@ if(!in_array($colorType,$colorTypes)) {
   $s.="\n".'(with this spelling and capitalization)'."\n";
   exit($s);
 };
+
+if(in_array($colorType,array('true color','palette'))) {
+  if(!isset($colorSpace)) {
+    exit('missing variable $colorSpace in php script');
+  }
+  
+  $colorSpaces=array(
+    'linear',
+    'sRGB',
+  );
+
+  if(!in_array($colorSpace,$colorSpaces)) {
+    $s='error: $colorType shall be either ';
+    $done=false;
+    foreach($colorTypes as $ct) {
+      if($done)
+        $s.=' or ';
+      else
+        $done=true;
+      $s.=$ct;
+    }
+    $s.="\n".'(with this spelling and capitalization)'."\n";
+    exit($s);
+  };
+}
 
 $varNames=array();
 foreach($parameters as $p) {
@@ -278,6 +334,7 @@ $content .= '
 #include <sstream>
 #include <fstream>
 #include <getopt.h>
+#include <vector>
 ';
 if($hasColorParams) {
   $content.='#include '.phpgcc_lib_include('color.cc').'
@@ -534,8 +591,8 @@ void describe() {
 
 /* triggered by --help command line option */
 void help() {
-    std::cout << "'.$name.', ©'.$year.' '.$author.'\n\n";
-    std::cout << "(this program uses the library phpgcc by Arnaud Chéritat)\n\n";
+    std::cout << "'.$name.', '.$author.' '.$year.'\n\n";
+    std::cout << "(program created with the help of the library phpgcc by Arnaud Chéritat)\n\n";
     describe();
     std::cout << "Syntax: " << "'.$name.'" << " [textfiles] [options]\n";
     std::cout << "  in any order, where textfiles are text files (indeed) containing the\n";
@@ -804,11 +861,13 @@ $content .= '
   // We add some text to the PNG file in its metadata:
   // program name, version, description, parameters, computation time
 
+  img.text_list.clear(); // added in v9.6.3
+
   PNGImg::pngText t;
   t.type = PNG_TEXT_COMPRESSION_NONE;
 
   t.key = "Software";
-  t.text = "'.$ccName.' version '.$version.' ©'.$year.' '.$author.'";
+  t.text = "'.$ccName.' version '.$version_latin1.' '.$author_latin1.' '.$year_latin1.'";
   img.text_list.push_back(t);
 
   t.key = "Description";
@@ -877,7 +936,7 @@ if($colorType=='ps') {
   // Write file header and save some metadata in it
   file << "%!PS-Adobe EPSF-3.0\n";
   file << "%%BoundingBox: " << bbLeft << " " << bbBottom << " " << bbRight << " " << bbTop << "\n";
-  file << "% Software: '.$ccName.' ©'.$year.' '.$author.'\n";
+  file << "% Software: '.$ccName.' '.$author.' '.$year.'\n";
   file << "% Description: '.escape_string_for_cpp_string(escape_string_for_eps_comment($description)).'\n";
   file << "% Parameters:\n";
   std::stringstream s;
@@ -1042,15 +1101,19 @@ int main(int argc, char** argv) {
   // all the command line argument reading/processing is done in clread.cc
   #include '.phpgcc_lib_include('clread.cc').'
 ';
-if(in_array($colorType,array('true color','palette')))
+if(in_array($colorType,array('true color','palette'))) {
   $content.='
   img.width = width;
   img.height = height;
   img.bit_depth = 8;
+';
+  if($colorSpace=='linear')
+  $content.='
   img.has_sRGB=false;
   img.has_gamma=true;
   img.decoding_gamma=1.0;
 ';
+}
 if($colorType=='true color')
   $content.='
   img.color_type = PNG_COLOR_TYPE_RGB;

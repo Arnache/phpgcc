@@ -9,6 +9,7 @@ $version='1.0';
 $description='Some Julia set';
 
 $colorType='true color'; // 'true color','palette','no pic','ps'
+$colorSpace='linear'; // 'linear','sRGB'
 
 $compileDirectives='-fopenmp -g0 -O3';
 
